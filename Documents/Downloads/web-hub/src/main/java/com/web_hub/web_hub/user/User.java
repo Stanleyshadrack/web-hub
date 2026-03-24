@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users") // ⭐ IMPORTANT FIX
+@Table(name = "users")
 @Getter
 @Setter
 @Builder
@@ -24,10 +24,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "username", unique = true, nullable = false)
+    private String username;
+
     @Column(unique = true, nullable = false)
-    private String Username;
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -48,9 +51,10 @@ public class User implements UserDetails {
         return List.of(() -> "ROLE_" + role.name());
     }
 
+    // 👇 Decide what login uses
     @Override
     public String getUsername() {
-        return email;
+        return email; // or return username;
     }
 
     @Override
@@ -71,4 +75,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return active;
-    }}
+    }
+}

@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: web-hub
-
-
-jwt:
-  secret: ZmFrZVNlY3JldEtleTEyMzQ1Njc4OTA=

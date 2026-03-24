@@ -40,9 +40,10 @@ public class AuthService {
         }
 
         User user = User.builder()
+                .username(request.email())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .active(true)
                 .build();
 

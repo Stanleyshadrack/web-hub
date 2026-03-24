@@ -8,10 +8,10 @@
 		<version>4.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>Meraki.Hub</groupId>
-	<artifactId>Management-System</artifactId>
+	<groupId>com.web_hub</groupId>
+	<artifactId>web_hub</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Management-System</name>
+	<name>web_hub</name>
 	<description>A modern, feature-rich Human Resources management solution built with Next.js, React, and TypeScript. Designed to streamline workforce management for organizations of all sizes.</description>
 	<url/>
 	<licenses>
@@ -61,6 +61,13 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
