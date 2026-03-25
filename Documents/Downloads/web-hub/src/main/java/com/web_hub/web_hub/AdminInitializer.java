@@ -13,15 +13,15 @@ import java.time.Instant;
 
 @Configuration
 @RequiredArgsConstructor
-public class SuperAdminInitializer implements CommandLineRunner {
+public class AdminInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${app.super-admin.email}")
+    @Value("${app.admin.email}")
     private String email;
 
-    @Value("${app.super-admin.password}")
+    @Value("${app.admin.password}")
     private String password;
 
     @Override
@@ -33,10 +33,10 @@ public class SuperAdminInitializer implements CommandLineRunner {
         }
 
         User superAdmin = User.builder()
-                .username("superadmin")
+                .username("admin")
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .role(Role.SUPER_ADMIN)
+                .role(Role.ADMIN)
 
                 /* =========================
                    ACCOUNT STATUS
@@ -68,7 +68,7 @@ public class SuperAdminInitializer implements CommandLineRunner {
 
         userRepository.save(superAdmin);
 
-        System.out.println("✅ Default SUPER ADMIN created: " + email);
+        System.out.println("✅ Default  ADMIN created: " + email);
         System.out.println("🔐 Password change required on first login");
     }
 }
