@@ -41,7 +41,17 @@ public class User implements UserDetails {
     // MFA
     private String mfaOtp;
     private Instant mfaOtpExpiry;
+    private boolean approved;
+    private boolean emailVerified;
+    private boolean passwordSet;
+    private boolean forcePasswordChange;
+    private int failedLoginAttempts;
+    private Instant lockedUntil;
 
+    private boolean onboardingCompleted;
+
+    private Instant createdAt;
+    private Instant updatedAt;
     // Refresh tokens
     private String refreshToken;
     private Instant refreshTokenExpiry;

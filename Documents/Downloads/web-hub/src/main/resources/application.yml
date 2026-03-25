@@ -38,3 +38,8 @@ jwt:
   secret: JK1pNC7VMEhjqqK9CMypsw0ybDLJtzDDLk3N266Ld/k=
 
   expiration: 86400000
+
+app:
+  super-admin:
+    email: shazanaombonya@gmail.com
+    password: shazanase123
