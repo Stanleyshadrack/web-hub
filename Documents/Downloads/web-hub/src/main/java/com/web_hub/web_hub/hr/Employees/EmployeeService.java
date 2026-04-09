@@ -1,7 +1,13 @@
 package com.web_hub.web_hub.hr.Employees;
+import com.web_hub.web_hub.admin.auditlog.AuditLogService;
+import com.web_hub.web_hub.departments.Department;
+import com.web_hub.web_hub.departments.DepartmentRepository;
+import com.web_hub.web_hub.user.User;
+import com.web_hub.web_hub.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,59 +15,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeRepository EmployeeRepository;
+    private final UserRepository UserRepository;
+   private final DepartmentRepository departmentRepository;
+    private final AuditLogService auditLogService;
 
     /* ================= CREATE ================= */
-
     public EmployeeResponse createEmployee(CreateEmployeeRequest request) {
 
-        validateDepartment(request.getDepartment());
+        User user = UserRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (EmployeeRepository.existsByUser(user)) {
+            throw new RuntimeException("Employee already exists for this user");
+        }
         Employee employee = new Employee();
 
-        employee.setUserId(request.getUserId());
-        employee.setFirstName(request.getFirstName());
-        employee.setLastName(request.getLastName());
-        employee.setEmail(request.getEmail());
-        employee.setPosition(request.getPosition());
-        employee.setDepartment(request.getDepartment());
-        employee.setSalary(request.getSalary());
+        // link user
+        employee.setUser(user);
 
-        employee.setStatus("ACTIVE");
-
-        Employee saved = employeeRepository.save(employee);
-
-        return mapToResponse(saved);
-    }
-
-    /* ================= GET ALL ================= */
-
-    public List<EmployeeResponse> getAllEmployees() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    /* ================= GET BY ID ================= */
-
-    public EmployeeResponse getEmployeeById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-
-        return mapToResponse(employee);
-    }
-
-    /* ================= UPDATE ================= */
-
-    public EmployeeResponse updateEmployee(Long id, CreateEmployeeRequest request) {
-
-        validateDepartment(request.getDepartment());
-
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-
-        employee.setUserId(request.getUserId());
         employee.setFirstName(request.getFirstName());
         employee.setLastName(request.getLastName());
         employee.setEmail(request.getEmail());
@@ -70,68 +42,129 @@ public class EmployeeService {
         employee.setSalary(request.getSalary());
         employee.setPhone(request.getPhone());
 
-        Employee updated = employeeRepository.save(employee);
+        employee.setStatus("ACTIVE");
+        employee.setCreatedAt(LocalDateTime.now());
+
+        Employee saved = EmployeeRepository.save(employee);
+        auditLogService.logAction(
+                "CREATE",
+                "Employee",
+                saved.getId(),
+                saved.getEmail(),
+                "HR",
+                "Created new employee"
+        );
+
+        return mapToResponse(saved);
+    }
+
+    /* ================= GET ALL ================= */
+    public List<EmployeeResponse> getAllEmployees() {
+        return EmployeeRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /* ================= GET BY ID ================= */
+    public EmployeeResponse getEmployeeById(Long id) {
+        Employee employee = EmployeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        return mapToResponse(employee);
+    }
+
+    /* ================= UPDATE ================= */
+    public EmployeeResponse updateEmployee(Long id, CreateEmployeeRequest request) {
+
+        Employee employee = EmployeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        // Validate department from database
+        Department department = departmentRepository.findByName(request.getDepartment())
+                .orElseThrow(() -> new RuntimeException("Invalid or non-existing department"));
+
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setPosition(request.getPosition());
+        employee.setDepartment(department.getName()); // if using String
+        employee.setSalary(request.getSalary());
+        employee.setPhone(request.getPhone());
+
+        Employee updated = EmployeeRepository.save(employee);
+        auditLogService.logAction(
+                "CREATE",
+                "Employee",
+                updated.getId(),
+                updated.getEmail(),
+                "HR",
+                "Created new employee"
+        );
 
         return mapToResponse(updated);
     }
-
     /* ================= DELETE ================= */
-
     public void deleteEmployee(Long id) {
-        Employee employee = employeeRepository.findById(id)
+        Employee employee = EmployeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        employeeRepository.delete(employee);
+
+        EmployeeRepository.delete(employee);
+        auditLogService.logAction(
+                "DELETE",
+                "Employee",
+                employee.getId(),
+                employee.getEmail(),
+                "HR",
+                "Deleted employee"
+        );
+
     }
 
     /* ================= SUSPEND ================= */
-
     public void suspendEmployee(Long id) {
-        Employee employee = employeeRepository.findById(id)
+        Employee employee = EmployeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
         employee.setStatus("SUSPENDED");
 
-        employeeRepository.save(employee);
-    }
-
-    /* ================= GET DEPARTMENTS ================= */
-
-    public List<String> getDepartments() {
-        return List.of(
-                "LEADERSHIP",
-                "ENGINEERING",
-                "PROJECT_MANAGEMENT",
-                "QA",
-                "SUPPORT",
-                "SALES",
-                "FINANCE",
-                "HR"
+        EmployeeRepository.save(employee);
+        auditLogService.logAction(
+                "SUSPEND",
+                "Employee",
+                employee.getId(),
+                employee.getEmail(),
+                "HR",
+                "Suspended employee"
         );
+
     }
 
-    /* ================= VALIDATION ================= */
+    public EmployeeResponse getMyProfile(User user) {
 
-    private void validateDepartment(String department) {
+        Employee employee = EmployeeRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Employee profile not found"));
 
-        if (!getDepartments().contains(department)) {
-            throw new RuntimeException("Invalid department: " + department);
-        }
+        return mapToResponse(employee);
     }
+
+
 
     /* ================= MAPPER ================= */
-
     private EmployeeResponse mapToResponse(Employee employee) {
         return EmployeeResponse.builder()
                 .id(employee.getId())
-                .userId(employee.getUserId())
+                .userId(employee.getUser() != null ? employee.getUser().getId() : null)
                 .firstName(employee.getFirstName())
                 .lastName(employee.getLastName())
                 .email(employee.getEmail())
                 .position(employee.getPosition())
                 .department(employee.getDepartment())
                 .salary(employee.getSalary())
+                .phone (employee.getPhone())
                 .status(employee.getStatus())
+                .phone(employee.getPhone())
                 .build();
     }
 }

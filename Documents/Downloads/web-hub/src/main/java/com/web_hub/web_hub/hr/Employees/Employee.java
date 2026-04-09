@@ -1,5 +1,6 @@
 package com.web_hub.web_hub.hr.Employees;
 
+import com.web_hub.web_hub.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,8 +15,6 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
-
     private String firstName;
     private String lastName;
     private String email;
@@ -27,4 +26,8 @@ public class Employee {
     private String phone;
 
     private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

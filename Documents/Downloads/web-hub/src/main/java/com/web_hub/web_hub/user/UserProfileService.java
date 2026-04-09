@@ -1,6 +1,5 @@
 package com.web_hub.web_hub.user;
 
-import com.web_hub.web_hub.employeemodule.dto.UserProfileResponse;
 import com.web_hub.web_hub.exception.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +23,7 @@ public class UserProfileService {
         );
     }
 
-    private User getCurrentUser() {
+    public User getCurrentUser() {
         String email = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();

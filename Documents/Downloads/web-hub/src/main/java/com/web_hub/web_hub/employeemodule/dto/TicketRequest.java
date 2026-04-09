@@ -1,6 +1,10 @@
 package com.web_hub.web_hub.employeemodule.dto;
 
-public record TicketRequest(
-        String subject,
-        String description
-) {}
+import lombok.Data;
+
+@Data
+public class TicketRequest {
+    private String title;
+    private String description;
+    private String priority;
+}

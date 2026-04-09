@@ -1,7 +1,9 @@
 package com.web_hub.web_hub.auth;
 
 
-import com.web_hub.web_hub.admin.dto.*;
+import com.web_hub.web_hub.admin.CreateUserRequest;
+import com.web_hub.web_hub.admin.UpdateUserRequest;
+import com.web_hub.web_hub.admin.UserResponse;
 import com.web_hub.web_hub.dto.*;
 import com.web_hub.web_hub.emailService.EmailService;
 import com.web_hub.web_hub.exception.AuthException;
@@ -260,37 +262,7 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    /* =========================================================
-       DEPARTMENTS
-       ========================================================= */
-    public String getDepartments() {
-        return "Departments fetched";
-    }
 
-    public void createDepartment(DepartmentRequest request) {
-        // you can implement DB later
-    }
-
-    /* =========================================================
-       ASSETS
-       ========================================================= */
-    public String getAssets() {
-        return "Assets fetched";
-    }
-
-    /* =========================================================
-       AUDIT LOGS
-       ========================================================= */
-    public String getAuditLogs() {
-        return "Audit logs fetched";
-    }
-
-    /* =========================================================
-       ANNOUNCEMENTS
-       ========================================================= */
-    public void sendAnnouncement(AnnouncementRequest request) {
-        // implement later
-    }
 
     /* =========================================================
        MAPPER

@@ -1,5 +1,7 @@
 package com.web_hub.web_hub.auth;
-import com.web_hub.web_hub.admin.dto.*;
+import com.web_hub.web_hub.admin.CreateUserRequest;
+import com.web_hub.web_hub.admin.UpdateUserRequest;
+import com.web_hub.web_hub.admin.UserResponse;
 import com.web_hub.web_hub.dto.*;
 
 import jakarta.validation.Valid;
@@ -113,44 +115,6 @@ public class AuthController {
         return ResponseEntity.ok("Password reset");
     }
 
-    /* ================= DEPARTMENTS ================= */
-
-    @GetMapping("/departments")
-    public ResponseEntity<String> getDepartments() {
-        return ResponseEntity.ok(authService.getDepartments());
-    }
-
-    @PostMapping("/departments")
-    public ResponseEntity<String> createDepartment(
-            @RequestBody DepartmentRequest request
-    ) {
-        authService.createDepartment(request);
-        return ResponseEntity.ok("Department created");
-    }
-
-    /* ================= ASSETS ================= */
-
-    @GetMapping("/assets")
-    public ResponseEntity<String> getAssets() {
-        return ResponseEntity.ok(authService.getAssets());
-    }
-
-    /* ================= AUDIT LOGS ================= */
-
-    @GetMapping("/audit-logs")
-    public ResponseEntity<String> getAuditLogs() {
-        return ResponseEntity.ok(authService.getAuditLogs());
-    }
-
-    /* ================= ANNOUNCEMENTS ================= */
-
-    @PostMapping("/announcements")
-    public ResponseEntity<String> sendAnnouncement(
-            @RequestBody AnnouncementRequest request
-    ) {
-        authService.sendAnnouncement(request);
-        return ResponseEntity.ok("Announcement sent");
-    }
 
     /* ================= LOGOUT ================= */
 

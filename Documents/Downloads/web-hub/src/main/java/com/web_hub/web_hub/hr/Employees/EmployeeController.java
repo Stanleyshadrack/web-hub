@@ -61,10 +61,6 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee suspended");
     }
 
-    /* ================= DEPARTMENTS ================= */
 
-    @GetMapping("/departments")
-    public ResponseEntity<List<String>> getDepartments() {
-        return ResponseEntity.ok(employeeService.getDepartments());
-    }
+
 }

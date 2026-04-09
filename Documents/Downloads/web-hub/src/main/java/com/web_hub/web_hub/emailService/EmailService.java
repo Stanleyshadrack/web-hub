@@ -40,7 +40,7 @@ public class EmailService {
                             "👉 " + setPasswordUrl + "\n\n" +
                             "⏰ This link expires in 24 hours.\n\n" +
                             "If you did not request this, please ignore this email.\n\n" +
-                            "Regards,\nApartment Management Team"
+                            "Regards,\nMeraki Systems Limited"
             );
 
             mailSender.send(message);
