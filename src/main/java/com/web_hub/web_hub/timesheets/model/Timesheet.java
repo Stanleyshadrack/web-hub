@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.timesheets;
+package com.web_hub.web_hub.timesheets.model;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -12,8 +12,8 @@ import com.web_hub.web_hub.projects.milestones.Milestone;
 import com.web_hub.web_hub.projects.milestones.MilestoneRepository;
 import com.web_hub.web_hub.projects.api.dto.ProjectStatusReportResponse;
 import com.web_hub.web_hub.projects.resourceutilization.ResourceUtilizationResponse;
-import com.web_hub.web_hub.timesheets.Timesheet;
-import com.web_hub.web_hub.timesheets.TimesheetRepository;
+import com.web_hub.web_hub.timesheets.model.Timesheet;
+import com.web_hub.web_hub.timesheets.repository.TimesheetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

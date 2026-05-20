@@ -1,15 +1,12 @@
-package com.web_hub.web_hub.timesheets;
+package com.web_hub.web_hub.timesheets.api.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-@Builder
-public class TimesheetResponse {
+public class CreateTimesheetRequest {
 
-    private Long id;
     private Long projectId;
     private Long employeeId;
     private LocalDate workDate;
