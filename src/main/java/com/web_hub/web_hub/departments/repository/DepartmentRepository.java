@@ -1,5 +1,6 @@
-package com.web_hub.web_hub.departments;
+package com.web_hub.web_hub.departments.repository;
 
+import com.web_hub.web_hub.departments.model.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

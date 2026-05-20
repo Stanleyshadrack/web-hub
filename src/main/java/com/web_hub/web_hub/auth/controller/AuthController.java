@@ -1,7 +1,8 @@
-package com.web_hub.web_hub.auth;
+package com.web_hub.web_hub.auth.controller;
 import com.web_hub.web_hub.admin.CreateUserRequest;
 import com.web_hub.web_hub.admin.UpdateUserRequest;
 import com.web_hub.web_hub.admin.UserResponse;
+import com.web_hub.web_hub.auth.service.AuthService;
 import com.web_hub.web_hub.dto.*;
 
 import jakarta.validation.Valid;

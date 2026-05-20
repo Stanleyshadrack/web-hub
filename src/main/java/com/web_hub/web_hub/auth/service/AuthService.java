@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.auth;
+package com.web_hub.web_hub.auth.service;
 
 
 import com.web_hub.web_hub.admin.CreateUserRequest;

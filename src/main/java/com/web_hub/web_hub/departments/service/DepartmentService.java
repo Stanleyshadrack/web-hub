@@ -1,5 +1,9 @@
-package com.web_hub.web_hub.departments;
+package com.web_hub.web_hub.departments.service;
 
+import com.web_hub.web_hub.departments.api.dto.DepartmentRequest;
+import com.web_hub.web_hub.departments.api.dto.DepartmentResponse;
+import com.web_hub.web_hub.departments.model.Department;
+import com.web_hub.web_hub.departments.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

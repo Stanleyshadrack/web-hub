@@ -1,7 +1,7 @@
 package com.web_hub.web_hub.hr.Employees;
 import com.web_hub.web_hub.admin.auditlog.AuditLogService;
-import com.web_hub.web_hub.departments.Department;
-import com.web_hub.web_hub.departments.DepartmentRepository;
+import com.web_hub.web_hub.departments.model.Department;
+import com.web_hub.web_hub.departments.repository.DepartmentRepository;
 import com.web_hub.web_hub.user.User;
 import com.web_hub.web_hub.user.UserRepository;
 import lombok.RequiredArgsConstructor;

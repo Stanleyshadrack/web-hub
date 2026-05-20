@@ -1,5 +1,8 @@
-package com.web_hub.web_hub.departments;
+package com.web_hub.web_hub.departments.api.controller;
 
+import com.web_hub.web_hub.departments.api.dto.DepartmentRequest;
+import com.web_hub.web_hub.departments.api.dto.DepartmentResponse;
+import com.web_hub.web_hub.departments.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

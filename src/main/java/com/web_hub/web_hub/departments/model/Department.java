@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.departments;
+package com.web_hub.web_hub.departments.model;
 
 import jakarta.persistence.*;
 import lombok.*;
