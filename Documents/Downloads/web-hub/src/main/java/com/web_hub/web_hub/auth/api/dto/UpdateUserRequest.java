@@ -1,0 +1,10 @@
+package com.web_hub.web_hub.auth.api.dto;
+
+import com.web_hub.web_hub.role.Role;
+
+public record UpdateUserRequest(
+        String username,
+        String email,
+        Role role,
+        Boolean active
+) {}

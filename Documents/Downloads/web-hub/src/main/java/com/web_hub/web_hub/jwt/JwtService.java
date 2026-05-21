@@ -1,7 +1,7 @@
 package com.web_hub.web_hub.jwt;
 
 
-import com.web_hub.web_hub.user.User;
+import com.web_hub.web_hub.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

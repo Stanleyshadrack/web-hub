@@ -1,7 +1,7 @@
-package com.web_hub.web_hub.employeemodule.timesheet;
+package com.web_hub.web_hub.employeemodule.payslip.service;
 
-import com.web_hub.web_hub.projects.timesheets.model.Timesheet;
-import com.web_hub.web_hub.projects.timesheets.repository.TimesheetRepository;
+import com.web_hub.web_hub.hr.payroll.model.Payroll;
+import com.web_hub.web_hub.hr.payroll.repository.PayrollRepository;
 import com.web_hub.web_hub.hr.Employees.model.Employee;
 import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import com.web_hub.web_hub.user.model.User;
@@ -12,18 +12,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MyTimesheetService {
+public class MyPayslipService {
 
     private final EmployeeRepository employeeRepository;
-    private final TimesheetRepository timesheetRepository;
+    private final PayrollRepository payrollRepository;
 
-    public List<Timesheet> getMyTimesheets(User user) {
+    public List<Payroll> getMyPayslips(User user) {
 
-        // 🔥 SAME as payslip
+        // Get employee linked to logged-in user
         Employee employee = employeeRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        // Fetch timesheets for that employee
-        return timesheetRepository.findByEmployeeId(employee.getId());
+        // Fetch payroll records for that employee
+        return payrollRepository.findByEmployeeId(employee.getId());
     }
 }

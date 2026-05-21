@@ -1,30 +1,31 @@
-package com.web_hub.web_hub.employeemodule.timesheet;
+package com.web_hub.web_hub.employeemodule.myprojects.api.controller;
 
+import com.web_hub.web_hub.employeemodule.myprojects.service.MyProjectService;
+import com.web_hub.web_hub.projects.project.model.Project;
 import com.web_hub.web_hub.user.model.User;
 import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/my/timesheets")
+@RequestMapping("/api/my/projects")
 @RequiredArgsConstructor
-public class MyTimesheetController {
+public class MyProjectController {
 
-    private final MyTimesheetService service;
+    private final MyProjectService service;
     private final UserRepository userRepository;
 
     @GetMapping
-    public ResponseEntity<List<?>> getMyTimesheets(Authentication authentication) {
+    public List<Project> getMyProjects(Authentication authentication) {
 
         String email = authentication.getName();
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(service.getMyTimesheets(user));
+        return service.getMyProjects(user);
     }
 }

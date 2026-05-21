@@ -1,8 +1,8 @@
 package com.web_hub.web_hub;
 
 import com.web_hub.web_hub.role.Role;
-import com.web_hub.web_hub.user.User;
-import com.web_hub.web_hub.user.UserRepository;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
