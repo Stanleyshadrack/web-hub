@@ -1,8 +1,8 @@
 package com.web_hub.web_hub.employeemodule.payslip;
 
 import com.web_hub.web_hub.hr.payroll.Payroll;
-import com.web_hub.web_hub.user.User;
-import com.web_hub.web_hub.user.UserRepository;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

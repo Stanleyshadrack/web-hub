@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.user;
+package com.web_hub.web_hub.user.api.dto;
 
 import com.web_hub.web_hub.role.Role;
 import java.time.LocalDate;

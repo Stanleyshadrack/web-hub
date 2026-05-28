@@ -6,7 +6,7 @@ import com.web_hub.web_hub.projects.model.Project;
 import com.web_hub.web_hub.projects.model.ProjectAssignment;
 import com.web_hub.web_hub.projects.repository.ProjectAssignmentRepository;
 import com.web_hub.web_hub.projects.repository.ProjectRepository;
-import com.web_hub.web_hub.user.User;
+import com.web_hub.web_hub.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

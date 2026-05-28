@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.user;
+package com.web_hub.web_hub.user.model;
 
 import com.web_hub.web_hub.role.Role;
 import jakarta.persistence.*;

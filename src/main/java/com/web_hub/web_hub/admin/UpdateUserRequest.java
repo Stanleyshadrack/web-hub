@@ -6,5 +6,11 @@ public record UpdateUserRequest(
         String username,
         String email,
         Role role,
-        Boolean active
+        Boolean active,
+        String firstName,
+        String lastName,
+        String jobTitle,
+        String phoneNumber,
+        String department,
+        String location
 ) {}

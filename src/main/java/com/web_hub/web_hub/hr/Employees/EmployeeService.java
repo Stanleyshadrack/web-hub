@@ -2,8 +2,8 @@ package com.web_hub.web_hub.hr.Employees;
 import com.web_hub.web_hub.admin.auditlog.AuditLogService;
 import com.web_hub.web_hub.departments.model.Department;
 import com.web_hub.web_hub.departments.repository.DepartmentRepository;
-import com.web_hub.web_hub.user.User;
-import com.web_hub.web_hub.user.UserRepository;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

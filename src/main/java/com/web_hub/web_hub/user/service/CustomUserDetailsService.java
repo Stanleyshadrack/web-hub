@@ -1,5 +1,7 @@
-package com.web_hub.web_hub.user;
+package com.web_hub.web_hub.user.service;
 
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .authorities("ROLE_" + user.getRole().name()) // ✅ CRITICAL LINE
+                .authorities("ROLE_" + user.getRole().name())
                 .accountLocked(!user.isActive())
                 .build();
     }

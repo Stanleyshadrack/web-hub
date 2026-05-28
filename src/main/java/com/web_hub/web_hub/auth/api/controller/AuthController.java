@@ -61,9 +61,11 @@ public class AuthController {
 
     // --- SELF-SERVICE PASSWORD RESET ENDPOINTS ---
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         authService.forgotPassword(request);
-        return ResponseEntity.ok("If an account exists, a reset OTP has been sent.");
+
+        // Returns {"message": "If an account exists, a reset OTP has been sent."}
+        return ResponseEntity.ok(Map.of("message", "If an account exists, a reset OTP has been sent."));
     }
 
     @PostMapping("/verify-reset-otp")

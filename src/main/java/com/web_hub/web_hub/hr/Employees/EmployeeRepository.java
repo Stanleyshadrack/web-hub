@@ -1,11 +1,8 @@
 package com.web_hub.web_hub.hr.Employees;
 
-import com.web_hub.web_hub.hr.issuewarnings.EmployeeRecord;
-import com.web_hub.web_hub.hr.issuewarnings.RecordType;
-import com.web_hub.web_hub.user.User;
+import com.web_hub.web_hub.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {

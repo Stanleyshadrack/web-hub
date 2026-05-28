@@ -11,7 +11,8 @@ import com.web_hub.web_hub.emailService.EmailService;
 import com.web_hub.web_hub.exception.AuthException;
 import com.web_hub.web_hub.jwt.JwtService;
 import com.web_hub.web_hub.role.Role;
-import com.web_hub.web_hub.user.*;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,7 +38,7 @@ public class AuthService {
        REGISTER USER
        ========================================================= */
     public void register(@Valid RegisterRequest request) {
-        if (userRepository.findByEmail(request.email()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(request.email()).isPresent()) {
             throw new AuthException("User already exists");
         }
 
@@ -56,7 +57,7 @@ public class AuthService {
        SELF REGISTRATION
        ========================================================= */
     public void selfRegister(@Valid SelfRegisterRequest request) {
-        if (userRepository.findByEmail(request.email()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(request.email()).isPresent()) {
             throw new AuthException("User already exists");
         }
 
@@ -76,7 +77,7 @@ public class AuthService {
     public UserResponse createUser(CreateUserRequest request) {
         userRepository.findByEmailIgnoreCase(request.email())
                 .ifPresent(u -> {
-                    throw new RuntimeException("User already exists");
+                    throw new AuthException("User already exists"); // Updated from RuntimeException
                 });
 
         String inviteToken = UUID.randomUUID().toString();
@@ -108,6 +109,13 @@ public class AuthService {
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getJobTitle(),
+                user.getPhoneNumber(),
+                user.getDepartment(),
+                user.getLocation(),
+                user.getJoinDate(),
                 user.getRole(),
                 user.isActive(),
                 inviteToken
@@ -141,7 +149,8 @@ public class AuthService {
        LOGIN → SEND OTP
        ========================================================= */
     public AuthResponse authenticate(@Valid AuthRequest request) {
-        User user = userRepository.findByEmail(request.email())
+        // Changed to IgnoreCase to prevent case-sensitivity login issues
+        User user = userRepository.findByEmailIgnoreCase(request.email())
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
         if (!user.isActive()) throw new AuthException("Account disabled");
@@ -163,7 +172,7 @@ public class AuthService {
        VERIFY OTP → ISSUE TOKENS
        ========================================================= */
     public AuthResponse verifyMfa(@Valid VerifyMfaRequest request) {
-        User user = userRepository.findByEmail(request.email())
+        User user = userRepository.findByEmailIgnoreCase(request.email())
                 .orElseThrow(() -> new AuthException("User not found"));
 
         if (user.getMfaOtp() == null) throw new AuthException("OTP not generated");
@@ -263,15 +272,30 @@ public class AuthService {
     /* =========================================================
        UPDATE USER
        ========================================================= */
+    /* =========================================================
+       UPDATE USER
+       ========================================================= */
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AuthException("User not found"));
 
+        // Existing fields
         if (request.email() != null) user.setEmail(request.email());
+        if (request.username() != null) user.setUsername(request.username());
         if (request.role() != null) user.setRole(request.role());
         if (request.active() != null) user.setActive(request.active());
 
+        // --- NEW PROFILE FIELDS ---
+        if (request.firstName() != null) user.setFirstName(request.firstName());
+        if (request.lastName() != null) user.setLastName(request.lastName());
+        if (request.jobTitle() != null) user.setJobTitle(request.jobTitle());
+        if (request.phoneNumber() != null) user.setPhoneNumber(request.phoneNumber());
+        if (request.department() != null) user.setDepartment(request.department());
+        if (request.location() != null) user.setLocation(request.location());
+        // --------------------------
+
         userRepository.save(user);
+
         return mapToResponse(user);
     }
 
@@ -305,9 +329,16 @@ public class AuthService {
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),
+                user.getFirstName(),   // Added
+                user.getLastName(),    // Added
+                user.getJobTitle(),    // Added
+                user.getPhoneNumber(), // Added
+                user.getDepartment(),  // Added
+                user.getLocation(),    // Added
+                user.getJoinDate(),    // Added
                 user.getRole(),
                 user.isActive(),
-                null
+                null // Keep token null for general fetching
         );
     }
 
