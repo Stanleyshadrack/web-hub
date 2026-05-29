@@ -77,7 +77,7 @@ public class AuthService {
     public UserResponse createUser(CreateUserRequest request) {
         userRepository.findByEmailIgnoreCase(request.email())
                 .ifPresent(u -> {
-                    throw new AuthException("User already exists"); // Updated from RuntimeException
+                    throw new AuthException("User already exists");
                 });
 
         String inviteToken = UUID.randomUUID().toString();
@@ -149,7 +149,6 @@ public class AuthService {
        LOGIN → SEND OTP
        ========================================================= */
     public AuthResponse authenticate(@Valid AuthRequest request) {
-        // Changed to IgnoreCase to prevent case-sensitivity login issues
         User user = userRepository.findByEmailIgnoreCase(request.email())
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
@@ -269,9 +268,17 @@ public class AuthService {
                 .toList();
     }
 
+    // 👇 ADDED BACK: Get User By ID Logic
     /* =========================================================
-       UPDATE USER
+       GET USER BY ID
        ========================================================= */
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AuthException("User not found"));
+
+        return mapToResponse(user);
+    }
+
     /* =========================================================
        UPDATE USER
        ========================================================= */
@@ -330,13 +337,13 @@ public class AuthService {
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),
-                user.getFirstName(),   // Added
-                user.getLastName(),    // Added
-                user.getJobTitle(),    // Added
-                user.getPhoneNumber(), // Added
-                user.getDepartment(),  // Added
-                user.getLocation(),    // Added
-                user.getJoinDate(),    // Added
+                user.getFirstName(),
+                user.getLastName(),
+                user.getJobTitle(),
+                user.getPhoneNumber(),
+                user.getDepartment(),
+                user.getLocation(),
+                user.getJoinDate(),
                 user.getRole(),
                 user.isActive(),
                 null // Keep token null for general fetching
