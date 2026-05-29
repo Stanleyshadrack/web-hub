@@ -1,6 +1,7 @@
-package com.web_hub.web_hub.user;
+package com.web_hub.web_hub.user.repository;
 
 
+import com.web_hub.web_hub.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

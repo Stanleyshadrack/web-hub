@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.user;
+package com.web_hub.web_hub.user.model;
 
 import com.web_hub.web_hub.role.Role;
 import jakarta.persistence.*;
@@ -32,6 +32,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = true)
+    private Instant lastLogoutDate;
 
     // --- NEW PROFILE FIELDS ---
     private String firstName;

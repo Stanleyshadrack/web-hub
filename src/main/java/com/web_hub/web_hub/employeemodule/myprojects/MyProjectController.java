@@ -1,8 +1,8 @@
 package com.web_hub.web_hub.employeemodule.myprojects;
 
 import com.web_hub.web_hub.projects.model.Project;
-import com.web_hub.web_hub.user.User;
-import com.web_hub.web_hub.user.UserRepository;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

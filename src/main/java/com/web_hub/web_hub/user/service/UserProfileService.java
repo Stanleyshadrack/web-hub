@@ -1,6 +1,9 @@
-package com.web_hub.web_hub.user;
+package com.web_hub.web_hub.user.service;
 
 import com.web_hub.web_hub.exception.AuthException;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
+import com.web_hub.web_hub.user.api.dto.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

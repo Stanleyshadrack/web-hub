@@ -1,7 +1,7 @@
 package com.web_hub.web_hub.employeemodule.timesheet;
 
-import com.web_hub.web_hub.user.User;
-import com.web_hub.web_hub.user.UserRepository;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

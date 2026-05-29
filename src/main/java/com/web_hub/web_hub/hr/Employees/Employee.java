@@ -1,6 +1,6 @@
 package com.web_hub.web_hub.hr.Employees;
 
-import com.web_hub.web_hub.user.User;
+import com.web_hub.web_hub.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
