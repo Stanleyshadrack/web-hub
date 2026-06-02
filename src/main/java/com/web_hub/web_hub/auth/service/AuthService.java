@@ -198,7 +198,7 @@ public class AuthService {
 
         String otp = generateOtp();
         user.setResetOtp(otp);
-        user.setResetOtpExpiry(Instant.now().plus(15, ChronoUnit.MINUTES));
+        user.setResetOtpExpiry(Instant.now().plus(2, ChronoUnit.MINUTES));
         userRepository.save(user);
 
         emailService.sendPasswordResetOtp(user.getEmail(), otp);
@@ -344,7 +344,7 @@ public class AuthService {
         String otp = generateOtp();
 
         user.setMfaOtp(otp);
-        user.setMfaOtpExpiry(Instant.now().plus(5, ChronoUnit.MINUTES));
+        user.setMfaOtpExpiry(Instant.now().plus(2, ChronoUnit.MINUTES));
 
         userRepository.save(user);
 

@@ -1,7 +1,12 @@
-package com.web_hub.web_hub.hr.Employees;
+package com.web_hub.web_hub.hr.Employees.service;
+
 import com.web_hub.web_hub.admin.auditlog.AuditLogService;
 import com.web_hub.web_hub.departments.model.Department;
 import com.web_hub.web_hub.departments.repository.DepartmentRepository;
+import com.web_hub.web_hub.hr.Employees.Employee;
+import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
+import com.web_hub.web_hub.hr.Employees.api.dto.CreateEmployeeRequest;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeResponse;
 import com.web_hub.web_hub.user.model.User;
 import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +46,6 @@ public class EmployeeService {
         employee.setDepartment(request.getDepartment());
         employee.setSalary(request.getSalary());
         employee.setPhone(request.getPhone());
-
         employee.setStatus("ACTIVE");
         employee.setCreatedAt(LocalDateTime.now());
 
@@ -165,6 +169,7 @@ public class EmployeeService {
                 .phone (employee.getPhone())
                 .status(employee.getStatus())
                 .phone(employee.getPhone())
+                .createdAt(employee.getCreatedAt())
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.hr.Employees;
+package com.web_hub.web_hub.hr.Employees.api.dto;
 
 import lombok.Data;
 
