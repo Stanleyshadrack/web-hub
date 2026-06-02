@@ -1,4 +1,4 @@
-package com.web_hub.web_hub.hr.Employees;
+package com.web_hub.web_hub.hr.Employees.repository;
 
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +20,5 @@ public class EmployeeResponse {
     private String status;
     private String position;
     private Double salary;
-
     private LocalDateTime createdAt;
 }
