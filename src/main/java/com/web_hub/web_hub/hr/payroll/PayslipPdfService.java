@@ -6,8 +6,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.web_hub.web_hub.hr.Employees.Employee;
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -6,8 +6,9 @@ import lombok.Data;
 @Data
 @Builder
 public class DepartmentResponse {
-    private Long id;
+    private String id;
     private String name;
     private String description;
-    private String status;
+    private String headCount;
+    private String annualBudget;
 }

@@ -1,9 +1,9 @@
 package com.web_hub.web_hub.employeemodule.payslip;
 
+import com.web_hub.web_hub.hr.Employees.model.Employee;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import com.web_hub.web_hub.hr.payroll.Payroll;
 import com.web_hub.web_hub.hr.payroll.PayrollRepository;
-import com.web_hub.web_hub.hr.Employees.Employee;
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
 import com.web_hub.web_hub.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
