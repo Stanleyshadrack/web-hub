@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface DepartmentRepository extends JpaRepository<Department, Long> {
+public interface DepartmentRepository extends JpaRepository<Department, String> {
     Optional<Department> findByName(String name);
+    boolean existsByName(String name);
 
     @Query("SELECT d, COUNT(e.id) FROM Department d LEFT JOIN Employee e ON d.id = e.departmentId GROUP BY d.id")
     List<Object[]> findAllDepartmentsWithHeadcount();

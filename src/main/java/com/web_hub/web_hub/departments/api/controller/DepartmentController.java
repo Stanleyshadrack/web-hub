@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("v1/api/departments")
+@RequestMapping("api/v1/departments")
 @RequiredArgsConstructor
 public class DepartmentController {
 
@@ -28,17 +28,17 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable Long id) {
+    public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable String id) {
         return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentResponse> updateDepartment(@PathVariable Long id, @RequestBody DepartmentRequest request) {
+    public ResponseEntity<DepartmentResponse> updateDepartment(@PathVariable String id, @RequestBody DepartmentRequest request) {
         return ResponseEntity.ok(departmentService.updateDepartment(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> archiveDepartment(@PathVariable Long id) {
+    public ResponseEntity<String> archiveDepartment(@PathVariable String id) {
         departmentService.archiveDepartment(id);
         return ResponseEntity.ok("Department " + id + " deleted successfully");
     }

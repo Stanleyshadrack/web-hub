@@ -1,9 +1,11 @@
 package com.web_hub.web_hub.departments.api.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class DepartmentResponse {
     private String id;
