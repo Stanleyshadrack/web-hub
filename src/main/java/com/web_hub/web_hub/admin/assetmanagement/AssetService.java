@@ -3,8 +3,8 @@ package com.web_hub.web_hub.admin.assetmanagement;
 import com.web_hub.web_hub.admin.AssetRequest;
 import com.web_hub.web_hub.admin.AssetResponse;
 import com.web_hub.web_hub.admin.auditlog.AuditLogService;
-import com.web_hub.web_hub.hr.Employees.Employee;
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
+import com.web_hub.web_hub.hr.Employees.model.Employee;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

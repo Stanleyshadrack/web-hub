@@ -1,5 +1,4 @@
-package com.web_hub.web_hub.hr.Employees;
-
+package com.web_hub.web_hub.hr.Employees.model;
 import com.web_hub.web_hub.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,6 +14,7 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String departmentId;
     private String firstName;
     private String lastName;
     private String email;

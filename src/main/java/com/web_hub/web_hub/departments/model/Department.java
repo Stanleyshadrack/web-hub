@@ -12,13 +12,9 @@ import java.time.LocalDateTime;
 public class Department {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private String name;
     private String description;
-
-    private String status;
-
+    private String headOfDepartment;
     private LocalDateTime createdAt;
 }

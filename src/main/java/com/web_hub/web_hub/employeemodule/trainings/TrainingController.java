@@ -1,8 +1,8 @@
 package com.web_hub.web_hub.employeemodule.trainings;
 
 import com.web_hub.web_hub.employeemodule.dto.TrainingRequest;
-import com.web_hub.web_hub.hr.Employees.Employee;
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
+import com.web_hub.web_hub.hr.Employees.model.Employee;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

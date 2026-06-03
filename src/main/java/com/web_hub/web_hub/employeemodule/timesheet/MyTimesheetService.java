@@ -1,9 +1,9 @@
 package com.web_hub.web_hub.employeemodule.timesheet;
 
+import com.web_hub.web_hub.hr.Employees.model.Employee;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import com.web_hub.web_hub.timesheets.model.Timesheet;
 import com.web_hub.web_hub.timesheets.repository.TimesheetRepository;
-import com.web_hub.web_hub.hr.Employees.Employee;
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
 import com.web_hub.web_hub.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class MyTimesheetService {
 
     public List<Timesheet> getMyTimesheets(User user) {
 
-        // 🔥 SAME as payslip
+        // SAME as payslip
         Employee employee = employeeRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 

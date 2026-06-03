@@ -1,7 +1,7 @@
 package com.web_hub.web_hub.employeemodule.myprojects;
 
-import com.web_hub.web_hub.hr.Employees.Employee;
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
+import com.web_hub.web_hub.hr.Employees.model.Employee;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import com.web_hub.web_hub.projects.model.Project;
 import com.web_hub.web_hub.projects.model.ProjectAssignment;
 import com.web_hub.web_hub.projects.repository.ProjectAssignmentRepository;

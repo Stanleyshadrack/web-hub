@@ -1,6 +1,7 @@
 package com.web_hub.web_hub.hr.Headcount;
 
-import com.web_hub.web_hub.hr.Employees.EmployeeRepository;
+
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
