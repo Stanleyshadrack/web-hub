@@ -4,6 +4,8 @@ import com.web_hub.web_hub.departments.api.dto.DepartmentRequest;
 import com.web_hub.web_hub.departments.api.dto.DepartmentResponse;
 import com.web_hub.web_hub.departments.model.Department;
 import com.web_hub.web_hub.departments.repository.DepartmentRepository;
+import com.web_hub.web_hub.exception.AuthException;
+import com.web_hub.web_hub.exception.ResourceNotFoundException;
 import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,16 @@ public class DepartmentService {
 
     /* ================= CREATE ================= */
     public DepartmentResponse createDepartment(DepartmentRequest request) {
+        // Validate name
+        if (request.getName() == null || request.getName().trim().isEmpty()) {
+            throw new AuthException("Department name cannot be empty");
+        }
+
+        // Optional: Prevent duplicate names
+        if (departmentRepository.existsByName(request.getName())) {
+            throw new AuthException("Department with this name already exists");
+        }
+
         Department department = new Department();
         department.setId(generateNextId());
         department.setName(request.getName());
@@ -28,38 +40,34 @@ public class DepartmentService {
         department.setHeadOfDepartment(request.getHeadOfDepartment());
         department.setCreatedAt(LocalDateTime.now());
 
-        Department saved = departmentRepository.save(department);
-        return mapToResponse(saved, "0", "0");
+        return mapToResponse(departmentRepository.save(department), "0", "0");
     }
 
-    /* ================= UPDATE ================= */
-    public DepartmentResponse updateDepartment(Long id, DepartmentRequest request) {
+    public DepartmentResponse updateDepartment(String id, DepartmentRequest request) {
         Department dept = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with ID: " + id));
 
         dept.setName(request.getName());
         dept.setDescription(request.getDescription());
         dept.setHeadOfDepartment(request.getHeadOfDepartment());
 
         Department updated = departmentRepository.save(dept);
-        String headCount = String.valueOf(employeeRepository.countByDepartmentId(String.valueOf(id)));
+        String headCount = String.valueOf(employeeRepository.countByDepartmentId(id));
         return mapToResponse(updated, headCount, "0");
     }
 
-    /* ================= ARCHIVE (Delete) ================= */
-    public void archiveDepartment(Long id) {
+    public void archiveDepartment(String id) {
         if (!departmentRepository.existsById(id)) {
-            throw new RuntimeException("Department not found");
+            throw new ResourceNotFoundException("Cannot archive: Department not found with ID: " + id);
         }
         departmentRepository.deleteById(id);
     }
 
-    /* ================= GET BY ID ================= */
-    public DepartmentResponse getDepartmentById(Long id) {
+    public DepartmentResponse getDepartmentById(String id) {
         Department dept = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with ID: " + id));
 
-        String headCount = String.valueOf(employeeRepository.countByDepartmentId(String.valueOf(id)));
+        String headCount = String.valueOf(employeeRepository.countByDepartmentId(id));
         return mapToResponse(dept, headCount, "0");
     }
 
