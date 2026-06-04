@@ -21,14 +21,11 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
 
-    /* ================= CREATE ================= */
     public DepartmentResponse createDepartment(DepartmentRequest request) {
-        // Validate name
         if (request.getName() == null || request.getName().trim().isEmpty()) {
             throw new AuthException("Department name cannot be empty");
         }
 
-        // Optional: Prevent duplicate names
         if (departmentRepository.existsByName(request.getName())) {
             throw new AuthException("Department with this name already exists");
         }
@@ -71,7 +68,6 @@ public class DepartmentService {
         return mapToResponse(dept, headCount, "0");
     }
 
-    /* ================= GET ALL ================= */
     public List<DepartmentResponse> getAllDepartments() {
         return departmentRepository.findAll().stream()
                 .map(dept -> mapToResponse(dept,
@@ -84,6 +80,7 @@ public class DepartmentService {
         return "D" + (departmentRepository.count() + 1);
     }
 
+    // Updated to pull headOfDepartment straight from the dept model
     private DepartmentResponse mapToResponse(Department dept, String headCount, String budget) {
         return DepartmentResponse.builder()
                 .id(dept.getId())
@@ -91,6 +88,7 @@ public class DepartmentService {
                 .description(dept.getDescription())
                 .headCount(headCount)
                 .annualBudget(budget)
+                .headOfDepartment(dept.getHeadOfDepartment()) // Fixed mapping here
                 .build();
     }
 }

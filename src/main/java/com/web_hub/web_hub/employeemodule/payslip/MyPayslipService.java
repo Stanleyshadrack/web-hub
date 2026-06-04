@@ -19,9 +19,9 @@ public class MyPayslipService {
 
     public List<Payroll> getMyPayslips(User user) {
 
-        // Get employee linked to logged-in user
-        Employee employee = employeeRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        // ✅ Get employee linked to logged-in user via their shared email address
+        Employee employee = employeeRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("Employee profile not found for email: " + user.getEmail()));
 
         // Fetch payroll records for that employee
         return payrollRepository.findByEmployeeId(employee.getId());

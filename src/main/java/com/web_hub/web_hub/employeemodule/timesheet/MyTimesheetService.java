@@ -19,9 +19,9 @@ public class MyTimesheetService {
 
     public List<Timesheet> getMyTimesheets(User user) {
 
-        // SAME as payslip
-        Employee employee = employeeRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        // ✅ Get employee linked to logged-in user via their shared email address
+        Employee employee = employeeRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("Employee profile not found for email: " + user.getEmail()));
 
         // Fetch timesheets for that employee
         return timesheetRepository.findByEmployeeId(employee.getId());

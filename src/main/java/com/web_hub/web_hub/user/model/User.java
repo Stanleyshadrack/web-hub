@@ -1,5 +1,6 @@
 package com.web_hub.web_hub.user.model;
 
+import com.web_hub.web_hub.hr.Employees.model.Employee;
 import com.web_hub.web_hub.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,16 +35,6 @@ public class User implements UserDetails {
 
     @Column(nullable = true)
     private Instant lastLogoutDate;
-
-    // --- NEW PROFILE FIELDS ---
-    private String firstName;
-    private String lastName;
-    private String jobTitle;
-    private String phoneNumber;
-    private String department;
-    private String location;
-    private LocalDate joinDate;
-    // --------------------------
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -79,6 +69,11 @@ public class User implements UserDetails {
     // Refresh tokens
     private String refreshToken;
     private Instant refreshTokenExpiry;
+
+    // Corrected to strict 1:1 relationship
+    @OneToOne
+    @JoinColumn(name = "employee_id", unique = true)
+    private Employee employee;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

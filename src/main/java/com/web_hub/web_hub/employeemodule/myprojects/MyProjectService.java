@@ -18,14 +18,13 @@ public class MyProjectService {
 
     private final EmployeeRepository employeeRepository;
     private final ProjectAssignmentRepository assignmentRepository;
-    private final EmployeeRepository employeerepository;
-    private final ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository; // Removed the duplicate declaration here
 
     public List<Project> getMyProjects(User user) {
 
-        // Step 1: get employee
-        Employee employee = employeeRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        // Step 1: get employee using their email address
+        Employee employee = employeeRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("Employee profile not found for email: " + user.getEmail()));
 
         // Step 2: get assignments
         List<ProjectAssignment> assignments =

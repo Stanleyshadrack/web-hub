@@ -1,8 +1,7 @@
 package com.web_hub.web_hub.hr.Employees.model;
-import com.web_hub.web_hub.user.model.User;
+
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,16 +17,16 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String email;
-
-    private String position;
+    private String startDate;
+    private String bankName;
+    private String accountNumber;
+    private String jobTitle;
     private String department;
-    private Double salary;
-    private String status; // ACTIVE
+    private String kraPin;
+    private String identificationNumber;
+    private String idType;
+    private String status;
+    private String nationality;
     private String phone;
-
     private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 }

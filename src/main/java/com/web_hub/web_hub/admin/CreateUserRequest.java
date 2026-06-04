@@ -1,7 +1,6 @@
 package com.web_hub.web_hub.admin;
 
 import jakarta.validation.constraints.NotBlank;
-
 import jakarta.validation.constraints.Email;
 
 public record CreateUserRequest(
