@@ -3,13 +3,13 @@ spring:
     name: web-hub
 
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/web_hub
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/web_hub}
     driver-class-name: org.postgresql.Driver
-  username: postgres
-  password: 1234567@
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:1234567@}
 
   jpa:
     hibernate:
@@ -26,20 +26,18 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: stanleyshadrack213@gmail.com
-    password: hozpltwxbixcenpn
+    username: ${MAIL_USERNAME:stanleyshadrack213@gmail.com}
+    password: ${MAIL_PASSWORD:hozpltwxbixcenpn}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
       mail.smtp.starttls.required: true
 
-
 jwt:
-  secret: JK1pNC7VMEhjqqK9CMypsw0ybDLJtzDDLk3N266Ld/k=
-
-  expiration: 86400000
+  secret: ${JWT_SECRET:JK1pNC7VMEhjqqK9CMypsw0ybDLJtzDDLk3N266Ld/k=}
+  expiration: ${JWT_EXPIRATION:86400000}
 
 app:
   admin:
-    email: stanleysmandes@gmail.com
-    password: mande@ke2
+    email: ${ADMIN_EMAIL:stanleysmandes@gmail.com}
+    password: ${ADMIN_PASSWORD:mande@ke2}

@@ -1,8 +1,11 @@
+server:
+  port: ${SERVER_PORT:8081}
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/web_hub
-    username: postgres
-    password: 1234567@
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/web_hub}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:1234567@}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -14,8 +17,3 @@ spring:
         jdbc:
           time_zone: UTC
     show-sql: true
-
-
-
-server:
-  port: 8081
