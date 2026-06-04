@@ -1,6 +1,6 @@
 package com.web_hub.web_hub.user.api;
 
-import com.web_hub.web_hub.hr.Employees.repository.EmployeeResponse;
+import com.web_hub.web_hub.hr.Employees.api.dto.EmployeeResponse;
 import com.web_hub.web_hub.hr.Employees.service.EmployeeService;
 import com.web_hub.web_hub.user.model.User;
 import com.web_hub.web_hub.user.service.UserProfileService;

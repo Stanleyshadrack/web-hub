@@ -11,10 +11,14 @@ import com.web_hub.web_hub.auth.api.dto.VerifyResetOtpRequest;
 import com.web_hub.web_hub.dto.*;
 import com.web_hub.web_hub.emailService.EmailService;
 import com.web_hub.web_hub.exception.AuthException;
+import com.web_hub.web_hub.exception.ResourceNotFoundException;
+import com.web_hub.web_hub.hr.Employees.model.Employee;
+import com.web_hub.web_hub.hr.Employees.repository.EmployeeRepository;
 import com.web_hub.web_hub.jwt.JwtService;
 import com.web_hub.web_hub.role.Role;
 import com.web_hub.web_hub.user.model.User;
 import com.web_hub.web_hub.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,6 +41,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final EmailService emailService;
+    private final EmployeeRepository employeeRepository;
 
     /* =========================================================
        REGISTER USER
@@ -79,6 +84,14 @@ public class AuthService {
        INVITE USER (ADMIN ONLY)
        ========================================================= */
     public UserResponse createUser(CreateUserRequest request) {
+        // 1. Locate the pre-existing Employee record using the request email
+        Employee employee = employeeRepository.findByEmail(request.email().trim())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No employee profile found with email: " + request.email() +
+                                ". Create the employee profile before provisioning a user account."
+                ));
+
+        // 2. Prevent duplicate user accounts
         userRepository.findByEmailIgnoreCase(request.email().trim())
                 .ifPresent(u -> {
                     throw new AuthException("User already exists with this email address");
@@ -86,43 +99,48 @@ public class AuthService {
 
         String inviteToken = UUID.randomUUID().toString();
 
+        // 3. Build the User entity, attaching the discovered Employee
         User user = User.builder()
                 .username(request.email().toLowerCase().trim())
                 .email(request.email().trim())
                 .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .jobTitle(request.jobTitle())
-                .phoneNumber(request.phoneNumber())
-                .department(request.department())
-                .location(request.location())
-                .joinDate(java.time.LocalDate.now())
+                .employee(employee) // Connects the OneToOne mapping
                 .role(Role.valueOf(request.role().toUpperCase()))
                 .active(false)
                 .inviteToken(inviteToken)
-                .inviteExpiry(Instant.now().plus(2, java.time.temporal.ChronoUnit.DAYS)) // Aligns with the 48h text in email
+                .inviteExpiry(Instant.now().plus(2, java.time.temporal.ChronoUnit.DAYS))
                 .forcePasswordChange(true)
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        // ✅ Reverted to your explicit application route
+        // 4. Dispatch the onboarding invitation link
         String link = "http://localhost:3000/auth/set-password?token=" + inviteToken;
-        emailService.sendOnboardingInvite(user.getEmail(), link);
+        emailService.sendOnboardingInvite(savedUser.getEmail(), link);
 
+        // 5. Parse Employee join date safely for the response object
+        java.time.LocalDate joinDate = null;
+        if (employee.getStartDate() != null) {
+            try {
+                joinDate = java.time.LocalDate.parse(employee.getStartDate());
+            } catch (Exception e) {
+                // Fallback if format differs from ISO standard
+            }
+        }
+
+        // 6. Return response pulling master profile text directly from the Employee source of truth
         return new UserResponse(
-                user.getId(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getJobTitle(),
-                user.getPhoneNumber(),
-                user.getDepartment(),
-                user.getLocation(),
-                user.getJoinDate(),
-                user.getRole(),
-                user.isActive(),
+                savedUser.getId(),
+                savedUser.getEmail(),
+                savedUser.getUsername(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getJobTitle(),
+                employee.getPhone(),
+                employee.getDepartment(),
+                joinDate,
+                savedUser.getRole(),
+                savedUser.isActive(),
                 inviteToken
         );
     }
@@ -287,24 +305,29 @@ public class AuthService {
     /* =========================================================
        UPDATE USER
        ========================================================= */
+    @Transactional // Ensuring both User and Employee updates commit atomically
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AuthException("User not found"));
 
-        // Existing fields
+        // 1. Update core system/account fields
         if (request.email() != null) user.setEmail(request.email());
         if (request.username() != null) user.setUsername(request.username());
         if (request.role() != null) user.setRole(request.role());
         if (request.active() != null) user.setActive(request.active());
 
-        // --- NEW PROFILE FIELDS ---
-        if (request.firstName() != null) user.setFirstName(request.firstName());
-        if (request.lastName() != null) user.setLastName(request.lastName());
-        if (request.jobTitle() != null) user.setJobTitle(request.jobTitle());
-        if (request.phoneNumber() != null) user.setPhoneNumber(request.phoneNumber());
-        if (request.department() != null) user.setDepartment(request.department());
-        if (request.location() != null) user.setLocation(request.location());
-        // --------------------------
+        // 2. Route master profile updates directly to the linked Employee record
+        Employee employee = user.getEmployee();
+        if (employee != null) {
+            if (request.firstName() != null) employee.setFirstName(request.firstName());
+            if (request.lastName() != null) employee.setLastName(request.lastName());
+            if (request.jobTitle() != null) employee.setJobTitle(request.jobTitle());
+            if (request.phoneNumber() != null) employee.setPhone(request.phoneNumber());
+            if (request.department() != null) employee.setDepartment(request.department());
+
+            // Keep emails identical across account and master profile if changed
+            if (request.email() != null) employee.setEmail(request.email());
+        }
 
         userRepository.save(user);
 
@@ -356,17 +379,35 @@ public class AuthService {
        MAPPER
        ========================================================= */
     private UserResponse mapToResponse(User user) {
+        Employee employee = user.getEmployee();
+
+        // Safely pull up-to-date master profile details directly from Employee
+        String firstName = (employee != null) ? employee.getFirstName() : null;
+        String lastName = (employee != null) ? employee.getLastName() : null;
+        String jobTitle = (employee != null) ? employee.getJobTitle() : null;
+        String phoneNumber = (employee != null) ? employee.getPhone() : null;
+        String department = (employee != null) ? employee.getDepartment() : null;
+
+        // Parse Employee startDate into LocalDate safely for the DTO response
+        java.time.LocalDate joinDate = null;
+        if (employee != null && employee.getStartDate() != null) {
+            try {
+                joinDate = java.time.LocalDate.parse(employee.getStartDate());
+            } catch (Exception e) {
+                // Fallback if string date format varies from ISO standard standard format
+            }
+        }
+
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getJobTitle(),
-                user.getPhoneNumber(),
-                user.getDepartment(),
-                user.getLocation(),
-                user.getJoinDate(),
+                firstName,
+                lastName,
+                jobTitle,
+                phoneNumber,
+                department,
+                joinDate,
                 user.getRole(),
                 user.isActive(),
                 null // Keep token null for general fetching

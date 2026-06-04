@@ -1,28 +1,34 @@
 package com.web_hub.web_hub.hr.Employees.api.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
-public class CreateEmployeeRequest {
+@Builder
+public class EmployeeResponse {
 
-    // Removed userId since Employee is created before the User account exists
-
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
-    private String jobTitle;
     private String department;
     private String departmentId;
-
-    // Core HR onboarding fields from your Employee model
+    private String jobTitle;
+    private String status;
+    
+    // Core HR onboarding fields
     private String startDate;
     private String identificationNumber;
     private String idType;
     private String nationality;
 
-    // Optional: Financial/Tax fields from your Employee model
+    // Financial/Tax fields
     private String bankName;
     private String accountNumber;
     private String kraPin;
+
+    private LocalDateTime createdAt;
 }

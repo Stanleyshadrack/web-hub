@@ -2,7 +2,7 @@ package com.web_hub.web_hub.hr.Employees.api.controller;
 
 
 import com.web_hub.web_hub.hr.Employees.api.dto.CreateEmployeeRequest;
-import com.web_hub.web_hub.hr.Employees.repository.EmployeeResponse;
+import com.web_hub.web_hub.hr.Employees.api.dto.EmployeeResponse;
 import com.web_hub.web_hub.hr.Employees.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

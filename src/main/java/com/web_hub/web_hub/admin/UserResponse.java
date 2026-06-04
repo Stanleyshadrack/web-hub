@@ -14,7 +14,6 @@ public record UserResponse(
         String jobTitle,
         String phoneNumber,
         String department,
-        String location,
         LocalDate joinDate,
         // --------------------------------
 
