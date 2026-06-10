@@ -1,10 +1,7 @@
 package com.web_hub.web_hub.assetManagement.service;
 
 
-import com.web_hub.web_hub.assetManagement.api.dto.AssetAssignmentRequestDto;
-import com.web_hub.web_hub.assetManagement.api.dto.AssetCreateRequestDto;
-import com.web_hub.web_hub.assetManagement.api.dto.AssetDashboardSummaryDto;
-import com.web_hub.web_hub.assetManagement.api.dto.AssetResponseDto;
+import com.web_hub.web_hub.assetManagement.api.dto.*;
 import com.web_hub.web_hub.assetManagement.model.Asset;
 import com.web_hub.web_hub.assetManagement.model.AssetStatus;
 import com.web_hub.web_hub.assetManagement.repository.AssetManagementRepository;
@@ -104,7 +101,37 @@ public class AssetManagementService {
 
         return mapToResponseDto(assetRepository.save(asset));
     }
+    // 4. UPDATE ASSET
+    @Transactional
+    public AssetResponseDto updateAsset(Long id, AssetUpdateRequestDto dto) {
+        Asset asset = assetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found with id: " + id));
 
+        if (dto.getName() != null) {
+            asset.setName(dto.getName());
+        }
+
+        if (dto.getCategory() != null) {
+            asset.setCategory(dto.getCategory());
+        }
+
+        if (dto.getSerialNumber() != null) {
+
+            if (!asset.getSerialNumber().equals(dto.getSerialNumber())
+                    && assetRepository.existsBySerialNumber(dto.getSerialNumber())) {
+                throw new DataIntegrityViolationException(
+                        "Asset with serial number '" + dto.getSerialNumber() + "' already exists"
+                );
+            }
+            asset.setSerialNumber(dto.getSerialNumber());
+        }
+
+        if (dto.getAssetCondition() != null) {
+            asset.setAssetCondition(dto.getAssetCondition());
+        }
+
+        return mapToResponseDto(assetRepository.save(asset));
+    }
     // --- Private Helper Methods ---
 
     private String generateNextAssetCode() {

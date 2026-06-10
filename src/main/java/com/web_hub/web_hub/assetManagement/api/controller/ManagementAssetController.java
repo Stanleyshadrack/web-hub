@@ -1,9 +1,6 @@
 package com.web_hub.web_hub.assetManagement.api.controller;
 
-import com.web_hub.web_hub.assetManagement.api.dto.AssetAssignmentRequestDto;
-import com.web_hub.web_hub.assetManagement.api.dto.AssetCreateRequestDto;
-import com.web_hub.web_hub.assetManagement.api.dto.AssetDashboardSummaryDto;
-import com.web_hub.web_hub.assetManagement.api.dto.AssetResponseDto;
+import com.web_hub.web_hub.assetManagement.api.dto.*;
 import com.web_hub.web_hub.assetManagement.model.AssetStatus;
 import com.web_hub.web_hub.assetManagement.service.AssetManagementService;
 import org.springframework.http.HttpStatus;
@@ -59,6 +56,15 @@ public class ManagementAssetController {
     @PutMapping("/{id}/unassign")
     public ResponseEntity<AssetResponseDto> unassignAsset(@PathVariable Long id) {
         AssetResponseDto updatedAsset = assetManagementService.unassignAsset(id);
+        return ResponseEntity.ok(updatedAsset);
+    }
+    // 6. Update Asset details
+    @PutMapping("/{id}")
+    public ResponseEntity<AssetResponseDto> updateAsset(
+            @PathVariable Long id,
+            @RequestBody AssetUpdateRequestDto dto) {
+
+        AssetResponseDto updatedAsset = assetManagementService.updateAsset(id, dto);
         return ResponseEntity.ok(updatedAsset);
     }
 }
