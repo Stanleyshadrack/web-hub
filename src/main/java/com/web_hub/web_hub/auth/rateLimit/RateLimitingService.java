@@ -26,7 +26,7 @@ public class RateLimitingService {
         // Tiered Limits: Strict for Auth, Standard for everything else
         if (requestURI.startsWith("/v1/api/auth")) {
             return Bucket.builder()
-                    .addLimit(Bandwidth.classic(5, Refill.greedy(5, Duration.ofMinutes(1))))
+                    .addLimit(Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1))))
                     .build();
         }
         return Bucket.builder()
