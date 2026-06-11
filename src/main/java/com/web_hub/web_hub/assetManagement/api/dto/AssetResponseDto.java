@@ -3,6 +3,7 @@ package com.web_hub.web_hub.assetManagement.api.dto;
 
 import com.web_hub.web_hub.assetManagement.model.AssetCondition;
 import com.web_hub.web_hub.assetManagement.model.AssetStatus;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,6 @@ public class AssetResponseDto {
     private LocalDate assignmentDate;
     private AssetCondition assetCondition;
     private AssetStatus status;
+    private String assignedBy;
+    private LocalDate unassignmentDate;
 }

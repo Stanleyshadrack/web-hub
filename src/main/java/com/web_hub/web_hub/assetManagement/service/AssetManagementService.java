@@ -6,6 +6,8 @@ import com.web_hub.web_hub.assetManagement.model.Asset;
 import com.web_hub.web_hub.assetManagement.model.AssetStatus;
 import com.web_hub.web_hub.assetManagement.repository.AssetManagementRepository;
 import com.web_hub.web_hub.exception.ResourceNotFoundException;
+import com.web_hub.web_hub.user.model.User;
+import com.web_hub.web_hub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.List;
 public class AssetManagementService {
 
     private final AssetManagementRepository assetRepository;
+    private final UserRepository userRepository;
 
     // 1. GET DASHBOARD METRICS
     @Transactional(readOnly = true)
@@ -66,9 +69,7 @@ public class AssetManagementService {
         asset.setCategory(dto.getCategory());
         asset.setSerialNumber(dto.getSerialNumber());
         asset.setAssetCondition(dto.getAssetCondition());
-        asset.setStatus(AssetStatus.AVAILABLE); // New assets default to available
-
-        // Dynamic code generation: e.g., AS001, AS002
+        asset.setStatus(AssetStatus.AVAILABLE);
         asset.setAssetCode(generateNextAssetCode());
 
         return mapToResponseDto(assetRepository.save(asset));
@@ -80,28 +81,74 @@ public class AssetManagementService {
         Asset asset = assetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found with id: " + id));
 
-        asset.setAssignedToName(dto.getAssignedToName());
-        asset.setAssignedToDepartment(dto.getAssignedToDepartment());
+        if (asset.getStatus() != AssetStatus.AVAILABLE) {
+            throw new IllegalStateException("Asset with code '" + asset.getAssetCode() +
+                    "' cannot be assigned because its current status is " + asset.getStatus() +
+                    ". It must be AVAILABLE to be assigned.");
+        }
+        if (!userRepository.existsById(dto.getUserId())) {
+            throw new ResourceNotFoundException("User not found with id: " + dto.getUserId());
+        }
+
+        // Fetch the admin/manager making the assignment
+        User assigner = userRepository.findById(Long.valueOf(dto.getAssignedBy()))
+                .orElseThrow(() -> new ResourceNotFoundException("Assigning user not found with id: " + dto.getAssignedBy()));
+
+        // Set assignment details
+        asset.setAssignedUserId(String.valueOf(dto.getUserId()));
         asset.setAssignmentDate(LocalDate.now());
         asset.setStatus(AssetStatus.ASSIGNED);
 
+        // FIX: Extract the name from the fetched 'assigner' entity instead of the DTO
+        asset.setAssignedBy(assigner.getUsername()); // <-- Use your actual User entity getter here
+
+        // Housekeeping: Clear previous unassignment data if this asset is being reassigned
+        asset.setUnassignmentDate(null);
+        asset.setUnassignReason(null);
+
         return mapToResponseDto(assetRepository.save(asset));
     }
+
 
     // 5. UNASSIGN ASSET (Return to Available Pool)
     @Transactional
-    public AssetResponseDto unassignAsset(Long id) {
+    public AssetResponseDto unassignAsset(Long id, UnassignAssetRequest request) {
         Asset asset = assetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found with id: " + id));
 
-        asset.setAssignedToName(null);
-        asset.setAssignedToDepartment(null);
+        // 👇 NEW VALIDATION: Ensure the asset is actually assigned before allowing unassignment
+        if (asset.getStatus() != AssetStatus.ASSIGNED || asset.getAssignedUserId() == null) {
+            throw new IllegalStateException("Asset with code '" + asset.getAssetCode() +
+                    "' cannot be unassigned because it is not currently assigned to anyone.");
+        }
+
+        // Validate the requested target status (AVAILABLE or IN_REPAIR)
+        if (request.getStatus() != AssetStatus.AVAILABLE && request.getStatus() != AssetStatus.IN_REPAIR) {
+            throw new IllegalArgumentException("Status during unassignment must be either AVAILABLE or IN_REPAIR");
+        }
+
+        // Clear assignment details
+        asset.setAssignedUserId(null);
         asset.setAssignmentDate(null);
-        asset.setStatus(AssetStatus.AVAILABLE);
+        asset.setAssignedBy(null);
+
+        // Record the exact date the asset was returned/unassigned
+        asset.setUnassignmentDate(LocalDate.now());
+
+        // Apply new status and optional reason
+        asset.setStatus(request.getStatus());
+
+        if (request.getReason() != null && !request.getReason().trim().isEmpty()) {
+            asset.setUnassignReason(request.getReason());
+        }
 
         return mapToResponseDto(assetRepository.save(asset));
     }
+
+    /*------------------------------------------------------------------------
     // 4. UPDATE ASSET
+    ---------------------------------------------------------------------------*/
+
     @Transactional
     public AssetResponseDto updateAsset(Long id, AssetUpdateRequestDto dto) {
         Asset asset = assetRepository.findById(id)
@@ -150,11 +197,14 @@ public class AssetManagementService {
                 asset.getName(),
                 asset.getCategory(),
                 asset.getSerialNumber(),
-                asset.getAssignedToName(),
+                asset.getAssignedUserId(),
                 asset.getAssignedToDepartment(),
+
                 asset.getAssignmentDate(),
                 asset.getAssetCondition(),
-                asset.getStatus()
+                asset.getStatus(),
+                asset.getAssignedBy(),
+                asset.getUnassignmentDate()
         );
     }
 }

@@ -36,6 +36,18 @@ public class Asset {
     @Column(name = "asset_condition")
     private AssetCondition assetCondition;
 
+    @Column(name = "unassign_reason")
+    private String unassignReason;
+
+    @Column(name = "assigned_user_id")
+    private String assignedUserId;
+
+    @Column(name = "assigned_by")
+    private String assignedBy;
+
+    @Column(name = "unassignment_date")
+    private LocalDate unassignmentDate;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AssetStatus status;

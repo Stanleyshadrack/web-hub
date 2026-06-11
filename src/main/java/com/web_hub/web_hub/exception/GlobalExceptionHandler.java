@@ -1,6 +1,5 @@
 package com.web_hub.web_hub.exception;
 
-
 import com.web_hub.web_hub.errorHandler.ApiErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -60,22 +59,26 @@ public class GlobalExceptionHandler {
     // 6. DATABASE CONSTRAINTS (e.g., duplicate unique keys like email)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-        // Passes through your clean service exceptions directly to the JSON response payload
         return buildResponse(HttpStatus.CONFLICT, "Database Conflict", ex.getMessage(), null);
     }
 
+    // 7. RESOURCE NOT FOUND
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), null);
     }
 
-    // 7. GENERIC FALLBACK (Catches NullPointerExceptions, logic crashes, etc.)
+    // 👇 NEW: 8. BUSINESS RULE / STATE VIOLATIONS (e.g., "Asset already assigned")
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalState(IllegalStateException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), null);
+    }
+
+    // 9. GENERIC FALLBACK (Catches NullPointerExceptions, logic crashes, etc.)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGlobalException(Exception ex) {
-        // In production, you'd log the 'ex.getMessage()' here but return a generic message to the user
         System.err.println("CRITICAL ERROR: " + ex.getMessage());
         ex.printStackTrace();
-
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", "An unexpected error occurred. Please try again later.", null);
     }
 

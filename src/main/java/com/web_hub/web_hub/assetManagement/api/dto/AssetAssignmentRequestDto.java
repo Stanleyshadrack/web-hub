@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class AssetAssignmentRequestDto {
-    private String assignedToName;
-    private String assignedToDepartment;
+    private Long userId;
+    private String assignedBy;
 }

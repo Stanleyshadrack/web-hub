@@ -54,9 +54,12 @@ public class ManagementAssetController {
 
     // 5. Click "Unassign" action
     @PutMapping("/{id}/unassign")
-    public ResponseEntity<AssetResponseDto> unassignAsset(@PathVariable Long id) {
-        AssetResponseDto updatedAsset = assetManagementService.unassignAsset(id);
-        return ResponseEntity.ok(updatedAsset);
+    public ResponseEntity<AssetResponseDto> unassignAsset(
+            @PathVariable Long id,
+            @RequestBody UnassignAssetRequest request) {
+
+        AssetResponseDto response = assetManagementService.unassignAsset(id, request);
+        return ResponseEntity.ok(response);
     }
     // 6. Update Asset details
     @PutMapping("/{id}")
