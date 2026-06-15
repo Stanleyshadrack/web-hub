@@ -156,20 +156,22 @@ public class EmployeeService {
     }
 
     /* ================= DELETE ================= */
-    public void deleteEmployee(Long id) {
-        // 👇 Changed to ResourceNotFoundException
+    public void terminateEmployee(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
 
-        employeeRepository.delete(employee);
+        // Update the status instead of deleting the record
+        employee.setStatus(EmployeeStatus.TERMINATED);
+        employeeRepository.save(employee); // Persist the status change
 
+        // Update the audit log to reflect the termination
         auditLogService.logAction(
-                "DELETE",
+                "TERMINATE", // Changed from DELETE
                 "Employee",
                 employee.getId(),
                 employee.getEmail(),
                 "HR",
-                "Deleted employee"
+                "Terminated employee" // Changed description
         );
     }
 

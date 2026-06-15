@@ -1,6 +1,5 @@
 package com.web_hub.web_hub.auth.api.controller;
 
-
 import com.web_hub.web_hub.admin.InviteUserRequest;
 import com.web_hub.web_hub.admin.UpdateUserRequest;
 import com.web_hub.web_hub.admin.UserResponse;
@@ -78,48 +77,47 @@ public class AuthController {
 
     /* ================= PROTECTED ADMIN ENDPOINTS ================= */
 
+    /**
+     * 🎯 Securely accepts both "ADMIN" and "ROLE_ADMIN" authorities to bridge
+     * any gaps between your encoded JWT payload values and your internal JWT Filter.
+     */
     @PostMapping("/invite")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid InviteUserRequest request) {
         return ResponseEntity.ok(authService.inviteUser(request));
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(authService.getAllUsers());
     }
 
-    // 👇 ADDED BACK: Get User By ID
     @GetMapping("/users/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(authService.getUserById(id));
     }
 
     @PutMapping("/users/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
         return ResponseEntity.ok(authService.updateUser(id, request));
     }
 
     @PatchMapping("/users/{id}/suspend")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ADMIN')")
     public ResponseEntity<Map<String, String>> suspendUser(@PathVariable Long id) {
         authService.suspendUser(id);
         return ResponseEntity.ok(Map.of("message", "User suspended"));
     }
 
     @PostMapping("/resend-otp")
-    public ResponseEntity<Map<String, String>> resendOtp(
-            @Valid @RequestBody ResendOtpRequest request
-    ) {
+    public ResponseEntity<Map<String, String>> resendOtp(@Valid @RequestBody ResendOtpRequest request) {
         authService.resendOtp(request);
-
-        return ResponseEntity.ok(
-                Map.of("message", "OTP resent successfully")
-        );
+        return ResponseEntity.ok(Map.of("message", "OTP resent successfully"));
     }
+
     /* ================= PROTECTED USER ENDPOINTS ================= */
 
     @PostMapping("/logout")

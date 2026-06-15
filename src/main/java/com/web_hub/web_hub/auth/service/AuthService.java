@@ -441,7 +441,7 @@ public class AuthService {
                 user,
                 Map.of(
                         "userId", user.getId(),
-                        "role", user.getRole().name()
+                        "role", "ROLE_" + user.getRole().name()
                 )
         );
 

@@ -5,6 +5,7 @@ public enum EmployeeStatus {
 
     ACTIVE,
     SUSPENDED,
-    INACTIVE
+    INACTIVE,
+    TERMINATED
 
 }
